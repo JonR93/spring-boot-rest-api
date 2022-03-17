@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
@@ -32,7 +33,7 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
+    @Spy
     private ModelMapper mapper;
 
     @InjectMocks
@@ -40,7 +41,6 @@ class UserServiceTest {
 
 
     private User user;
-    private UserDetailsDto userDetailsDto;
 
     @BeforeEach
     void setUp() {
@@ -51,8 +51,6 @@ class UserServiceTest {
                 .email("wontonjon@email.com")
                 .password("password")
                 .build();
-
-        userDetailsDto = new ModelMapper().map(user, UserDetailsDto.class);
     }
 
     @Test
@@ -68,7 +66,6 @@ class UserServiceTest {
         Page<User> page = new PageImpl<User>(usersList);
 
         given(userRepository.findAll(pageable)).willReturn(page);
-        given(mapper.map(user, UserDetailsDto.class)).willReturn(userDetailsDto);
         UsersDto users  = userServiceIml.findUsers(0,
                 10,
                 AppConstants.DEFAULT_SORT_BY,
@@ -83,7 +80,6 @@ class UserServiceTest {
     @Test
     void findUser() {
         given(userRepository.findById(1L)).willReturn(Optional.of(user));
-        given(mapper.map(user, UserDetailsDto.class)).willReturn(userDetailsDto);
         UserDetailsDto foundUser = userServiceIml.findUser(user.getId());
         assertThat(foundUser).isNotNull();
     }
@@ -103,7 +99,6 @@ class UserServiceTest {
 
         given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
         given(userRepository.save(user)).willReturn(savedUser);
-        given(mapper.map(savedUser, UserDetailsDto.class)).willReturn(unsavedChanges);
 
         UserDetailsDto updatedUser = userServiceIml.updateUser(unsavedChanges,user.getId());
 
