@@ -84,9 +84,4 @@ public class UserServiceImpl implements UserService {
     private UserDetailsDto mapToDTO(User user){
         return mapper.map(user, UserDetailsDto.class);
     }
-
-    // convert DTO to entity
-    private User mapToEntity(UserDetailsDto userDetailsDto){
-        return mapper.map(userDetailsDto, User.class);
-    }
 }

@@ -11,8 +11,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class MailDto {
     private long id;
-    private String fromAddress;
-    private String toAddress;
+    private String sentFrom;
+    private String sentTo;
     private String subject;
     private String body;
     private boolean wasSent;

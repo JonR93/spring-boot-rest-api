@@ -73,11 +73,11 @@ class UserServiceTest {
                 10,
                 AppConstants.DEFAULT_SORT_BY,
                 AppConstants.DEFAULT_SORT_DIRECTION);
-        Assertions.assertThat(users.getPageNo()).isEqualTo(0);
+        Assertions.assertThat(users.getPageNo()).isZero();
         Assertions.assertThat(users.getPageSize()).isEqualTo(1);
         Assertions.assertThat(users.getTotalElements()).isEqualTo(1);
         Assertions.assertThat(users.getTotalPages()).isEqualTo(1);
-        Assertions.assertThat(users.isLast()).isEqualTo(true);
+        Assertions.assertThat(users.isLast()).isTrue();
     }
 
     @Test

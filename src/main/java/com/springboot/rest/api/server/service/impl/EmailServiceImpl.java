@@ -79,9 +79,4 @@ public class EmailServiceImpl implements EmailService {
     private MailDto mapToDTO(Mail mail){
         return mapper.map(mail, MailDto.class);
     }
-
-    // convert DTO to entity
-    private Mail mapToEntity(MailDto mailDto){
-        return mapper.map(mailDto, Mail.class);
-    }
 }

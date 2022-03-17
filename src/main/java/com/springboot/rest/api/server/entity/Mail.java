@@ -18,8 +18,8 @@ public class Mail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String fromAddress;
-    private String toAddress;
+    private String sendFrom;
+    private String sendTo;
     private String subject;
     private String body;
     private boolean wasSent;

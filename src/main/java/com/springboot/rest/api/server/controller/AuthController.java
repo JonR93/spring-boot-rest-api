@@ -2,7 +2,6 @@ package com.springboot.rest.api.server.controller;
 
 import com.springboot.rest.api.server.entity.Mail;
 import com.springboot.rest.api.server.entity.PasswordResetToken;
-import com.springboot.rest.api.server.entity.Role;
 import com.springboot.rest.api.server.entity.User;
 import com.springboot.rest.api.server.exception.ResourceNotFoundException;
 import com.springboot.rest.api.server.payload.*;
@@ -72,28 +71,25 @@ public class AuthController {
 
     @ApiOperation(value = "Registers a new user")
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterUserDto registerUserDto){
-
-        // add check for username exists in a DB
-        if(userRepository.existsByUsername(registerUserDto.getUsername())){
+    public ResponseEntity<Object> registerUser(@RequestBody RegisterUserDto registerUserDto){
+        boolean usernameTaken = userRepository.existsByUsername(registerUserDto.getUsername());
+        if(usernameTaken){
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
 
-        // add check for email exists in DB
-        if(userRepository.existsByEmail(registerUserDto.getEmail())){
+        boolean emailInUse = userRepository.existsByEmail(registerUserDto.getEmail());
+        if(emailInUse){
             return new ResponseEntity<>("Email is already taken!", HttpStatus.BAD_REQUEST);
         }
 
-        // create user object
-        User user = new User();
-        user.setName(registerUserDto.getName());
-        user.setUsername(registerUserDto.getUsername());
-        user.setEmail(registerUserDto.getEmail());
-        user.setPassword(passwordEncoder.encode(registerUserDto.getPassword()));
+        User user = User.builder()
+                .name(registerUserDto.getName())
+                .username(registerUserDto.getUsername())
+                .email(registerUserDto.getEmail())
+                .password(passwordEncoder.encode(registerUserDto.getPassword()))
+                .build();
 
-        Role roles = roleRepository.findByName("ROLE_USER").get();
-        user.setRoles(Collections.singleton(roles));
-
+        roleRepository.findByName("ROLE_USER").ifPresent(role -> user.setRoles(Collections.singleton(role)));
         userRepository.save(user);
 
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
@@ -102,7 +98,7 @@ public class AuthController {
 
     @ApiOperation(value = "Check if an email exists in the system to send a password rest link to")
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> processForgotPassword(@RequestBody PasswordForgotDto passwordForgotDto){
+    public ResponseEntity<Object> processForgotPassword(@RequestBody PasswordForgotDto passwordForgotDto){
         String emailAddress = passwordForgotDto.getEmail();
 
         // Confirm a user exists with this email address
@@ -117,8 +113,8 @@ public class AuthController {
 
         // Generate email
         Mail mail = new Mail();
-        mail.setFromAddress("no-reply@springbootrestapi.com");
-        mail.setToAddress(user.getEmail());
+        mail.setSendFrom("no-reply@springbootrestapi.com");
+        mail.setSendTo(user.getEmail());
         mail.setSubject("Password reset request");
         // TODO: format email
         mail.setBody(token.getToken());
@@ -131,7 +127,7 @@ public class AuthController {
 
     @ApiOperation(value = "Reset password")
     @PostMapping("/reset-password")
-    public ResponseEntity<?> processResetPassword(@RequestBody PasswordResetDto passwordResetDto){
+    public ResponseEntity<Object> processResetPassword(@RequestBody PasswordResetDto passwordResetDto){
         String token = passwordResetDto.getToken();
         String newPassword = passwordResetDto.getPassword();
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);

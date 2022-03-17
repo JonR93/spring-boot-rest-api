@@ -3,7 +3,6 @@ package com.springboot.rest.api.server.service;
 import com.springboot.rest.api.server.entity.Mail;
 import com.springboot.rest.api.server.payload.MailDto;
 import com.springboot.rest.api.server.payload.MailsDto;
-import com.springboot.rest.api.server.payload.RolesDto;
 
 public interface EmailService {
     Mail sendEmail(Mail mail);
