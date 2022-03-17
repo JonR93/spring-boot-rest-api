@@ -1,13 +1,17 @@
 package com.springboot.rest.api.server.controller;
 
+import com.springboot.rest.api.server.entity.Mail;
+import com.springboot.rest.api.server.entity.PasswordResetToken;
 import com.springboot.rest.api.server.entity.Role;
 import com.springboot.rest.api.server.entity.User;
-import com.springboot.rest.api.server.payload.JWTAuthResponse;
-import com.springboot.rest.api.server.payload.LoginDto;
-import com.springboot.rest.api.server.payload.RegisterUserDto;
+import com.springboot.rest.api.server.exception.ResourceNotFoundException;
+import com.springboot.rest.api.server.payload.*;
+import com.springboot.rest.api.server.repository.PasswordResetTokenRepository;
 import com.springboot.rest.api.server.repository.RoleRepository;
 import com.springboot.rest.api.server.repository.UserRepository;
 import com.springboot.rest.api.server.security.JwtTokenProvider;
+import com.springboot.rest.api.server.service.EmailService;
+import com.springboot.rest.api.server.utils.AppConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.UUID;
 
 @Api(value = "Auth controller exposes register and login endpoints")
 @RestController
@@ -44,6 +49,12 @@ public class AuthController {
 
     @Autowired
     private JwtTokenProvider tokenProvider;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
     @ApiOperation(value = "Authenticates user login")
     @PostMapping("/login")
@@ -87,5 +98,47 @@ public class AuthController {
 
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
 
+    }
+
+    @ApiOperation(value = "Check if an email exists in the system to send a password rest link to")
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> processForgotPassword(@RequestBody PasswordForgotDto passwordForgotDto){
+        String emailAddress = passwordForgotDto.getEmail();
+
+        // Confirm a user exists with this email address
+        User user = userRepository.findByEmail(emailAddress).orElseThrow(() -> new ResourceNotFoundException("User", "email", emailAddress));
+
+        // Generate password reset token
+        PasswordResetToken token = new PasswordResetToken();
+        token.setToken(UUID.randomUUID().toString());
+        token.setUser(user);
+        token.setExpiryDate(AppConstants.DEFAULT_RESET_PASSWORD_LINK_EXPIRATION_MINUTES);
+        passwordResetTokenRepository.save(token);
+
+        // Generate email
+        Mail mail = new Mail();
+        mail.setFromAddress("no-reply@springbootrestapi.com");
+        mail.setToAddress(user.getEmail());
+        mail.setSubject("Password reset request");
+        // TODO: format email
+        mail.setBody(token.getToken());
+
+        // Send email
+        emailService.sendEmail(mail);
+
+        return new ResponseEntity<>("Password reset email sent", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Reset password")
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> processResetPassword(@RequestBody PasswordResetDto passwordResetDto){
+        String token = passwordResetDto.getToken();
+        String newPassword = passwordResetDto.getPassword();
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+        User user = passwordResetToken.getUser();
+        String updatedPassword = passwordEncoder.encode(newPassword);
+        userRepository.updatePassword(updatedPassword, user.getId());
+        passwordResetTokenRepository.delete(passwordResetToken);
+        return new ResponseEntity<>("Password reset successfully", HttpStatus.OK);
     }
 }
