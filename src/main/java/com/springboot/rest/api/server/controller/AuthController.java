@@ -112,7 +112,7 @@ public class AuthController {
         PasswordResetToken token = new PasswordResetToken();
         token.setToken(UUID.randomUUID().toString());
         token.setUser(user);
-        token.setExpiryDate(AppConstants.DEFAULT_RESET_PASSWORD_LINK_EXPIRATION_MINUTES);
+        token.setExpiryDate(AppConstants.DEFAULT_PASSWORD_RESET_TOKEN_EXPIRATION_MINUTES);
         passwordResetTokenRepository.save(token);
 
         // Generate email
