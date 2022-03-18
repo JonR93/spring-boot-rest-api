@@ -112,12 +112,12 @@ public class AuthController {
         passwordResetTokenRepository.save(token);
 
         // Generate email
-        Mail mail = new Mail();
-        mail.setSendFrom("no-reply@springbootrestapi.com");
-        mail.setSendTo(user.getEmail());
-        mail.setSubject("Password reset request");
-        // TODO: format email
-        mail.setBody(token.getToken());
+        Mail mail = Mail.builder()
+                .sendFrom("no-reply@springbootrestapi.com")
+                .sendTo("jon.ruel93@gmail.com")
+                .subject("Password reset request")
+                .body(token.getToken())
+                .build();
 
         // Send email
         emailService.sendEmail(mail);

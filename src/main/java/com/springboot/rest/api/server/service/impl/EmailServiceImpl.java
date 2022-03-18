@@ -6,32 +6,49 @@ import com.springboot.rest.api.server.payload.MailDto;
 import com.springboot.rest.api.server.payload.MailsDto;
 import com.springboot.rest.api.server.repository.MailRepository;
 import com.springboot.rest.api.server.service.EmailService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class EmailServiceImpl implements EmailService {
 
     private MailRepository mailRepository;
-
+    private JavaMailSender mailSender;
     private ModelMapper mapper;
-    
-    public EmailServiceImpl(ModelMapper mapper, MailRepository mailRepository){
-        this.mailRepository = mailRepository;
-        this.mapper = mapper;
-    }
 
+    @Async
     @Override
     public Mail sendEmail(Mail mail) {
-        //TODO: implement method
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setText(mail.getBody(), true);
+            helper.setTo(mail.getSendTo());
+            helper.setSubject(mail.getSubject());
+            helper.setFrom(mail.getSendFrom());
+            mailSender.send(mimeMessage);
+        } catch(MailAuthenticationException e){
+            //todo: implement logging
+            throw new IllegalStateException("Failed to send email.");
+        } catch (MessagingException e) {
+            throw new IllegalStateException("Failed to send email.");
+        }
         mail.setSentDate(new Date());
         mail.setWasSent(true);
         return mailRepository.save(mail);
