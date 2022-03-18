@@ -45,7 +45,7 @@ public class UserController {
 
     @ApiOperation(value = "Update User by id")
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UserDetailsDto> updateUser(@Valid @RequestBody UserDetailsDto userDetailsDto, @PathVariable(name = "id") long id){
         UserDetailsDto updatedUser = userService.updateUser(userDetailsDto, id);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
