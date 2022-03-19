@@ -3,6 +3,7 @@ package com.springboot.rest.api.server.repository;
 import com.springboot.rest.api.server.entity.PasswordResetToken;
 import com.springboot.rest.api.server.entity.Role;
 import com.springboot.rest.api.server.entity.User;
+import com.springboot.rest.api.server.exception.ResourceNotFoundException;
 import com.springboot.rest.api.server.utils.AppConstants;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +56,7 @@ class PasswordResetTokenRepositoryTest {
 
     @Test
     void findByToken() {
-        PasswordResetToken token = passwordResetTokenRepository.findByToken(PASSWORD_RESET_TOKEN);
+        PasswordResetToken token = passwordResetTokenRepository.findByToken(PASSWORD_RESET_TOKEN).orElseThrow(() -> new ResourceNotFoundException("PasswordResetToken", "token", PASSWORD_RESET_TOKEN));;
         Assertions.assertThat(token).isNotNull();
         Assertions.assertThat(token.getToken()).isEqualTo(PASSWORD_RESET_TOKEN);
         Assertions.assertThat(token.getUser()).isEqualTo(user);
