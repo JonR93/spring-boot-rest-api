@@ -14,7 +14,7 @@ public class LoggingConfiguration {
     @Bean
     @Scope("prototype")
     public Logger logger(final InjectionPoint ip) {
-        return LoggerFactory.getLogger(of(ip.getMethodParameter())
+        return LoggerFactory.getLogger(ofNullable(ip.getMethodParameter())
                 .<Class>map(MethodParameter::getContainingClass)
                 .orElseGet( () ->
                         ofNullable(ip.getField())
