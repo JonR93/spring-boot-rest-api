@@ -3,6 +3,7 @@ package com.springboot.rest.api.server.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
@@ -13,7 +14,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "mails")
-public class Mail {
+public class Mail extends AuditableEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

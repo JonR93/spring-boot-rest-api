@@ -3,6 +3,7 @@ package com.springboot.rest.api.server.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -14,7 +15,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "paaswordResetTokens")
-public class PasswordResetToken {
+public class PasswordResetToken implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
