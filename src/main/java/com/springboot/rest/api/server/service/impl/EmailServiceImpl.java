@@ -6,6 +6,7 @@ import com.springboot.rest.api.server.payload.MailDto;
 import com.springboot.rest.api.server.payload.MailsDto;
 import com.springboot.rest.api.server.repository.MailRepository;
 import com.springboot.rest.api.server.service.EmailService;
+import com.springboot.rest.api.server.utils.ObjectMapperUtil;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -67,7 +68,7 @@ public class EmailServiceImpl implements EmailService {
         // get content for page object
         List<Mail> listOfMails = allMail.getContent();
 
-        List<MailDto> content = listOfMails.stream().map(this::mapToDTO).collect(Collectors.toList());
+        List<MailDto> content = ObjectMapperUtil.mapAll(listOfMails,MailDto.class);
 
         MailsDto mailsDto = new MailsDto();
         mailsDto.setContent(content);
@@ -83,17 +84,12 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public MailDto findMailById(long id) {
         Mail mail = mailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Mail", "id", id));
-        return mapToDTO(mail);
+        return ObjectMapperUtil.map(mail,MailDto.class);
     }
 
     @Override
     public void deleteMail(long id) {
         Mail mail = mailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Mail", "id", id));
         mailRepository.delete(mail);
-    }
-
-    // convert Entity into DTO
-    private MailDto mapToDTO(Mail mail){
-        return mapper.map(mail, MailDto.class);
     }
 }

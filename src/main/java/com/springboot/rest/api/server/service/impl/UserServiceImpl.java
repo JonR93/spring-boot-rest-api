@@ -6,6 +6,7 @@ import com.springboot.rest.api.server.payload.UserDetailsDto;
 import com.springboot.rest.api.server.payload.UsersDto;
 import com.springboot.rest.api.server.repository.UserRepository;
 import com.springboot.rest.api.server.service.UserService;
+import com.springboot.rest.api.server.utils.ObjectMapperUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
         // get content for page object
         List<User> listOfUsers = users.getContent();
 
-        List<UserDetailsDto> content = listOfUsers.stream().map(this::mapToDTO).collect(Collectors.toList());
+        List<UserDetailsDto> content = ObjectMapperUtil.mapAll(listOfUsers,UserDetailsDto.class);
 
         UsersDto usersResponse = new UsersDto();
         usersResponse.setContent(content);
@@ -57,7 +58,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetailsDto findUser(long id) {
         User user = findUserById(id);
-        return mapToDTO(user);
+        return ObjectMapperUtil.map(user,UserDetailsDto.class);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDetailsDto.getUsername());
         user.setEmail(userDetailsDto.getEmail());
         User updateUser = userRepository.save(user);
-        return mapToDTO(updateUser);
+        return ObjectMapperUtil.map(updateUser,UserDetailsDto.class);
     }
 
     @Override
@@ -78,10 +79,5 @@ public class UserServiceImpl implements UserService {
 
     private User findUserById(long id){
         return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
-    }
-
-    // convert Entity into DTO
-    private UserDetailsDto mapToDTO(User user){
-        return mapper.map(user, UserDetailsDto.class);
     }
 }

@@ -6,6 +6,7 @@ import com.springboot.rest.api.server.payload.RoleDto;
 import com.springboot.rest.api.server.payload.RolesDto;
 import com.springboot.rest.api.server.repository.RoleRepository;
 import com.springboot.rest.api.server.service.RoleService;
+import com.springboot.rest.api.server.utils.ObjectMapperUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,21 +31,21 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDto createRole(RoleDto roleDto) {
-        Role role = mapToEntity(roleDto);
+        Role role = ObjectMapperUtil.map(roleDto,Role.class);
         Role newRole = roleRepository.save(role);
-        return mapToDTO(newRole);
+        return ObjectMapperUtil.map(newRole,RoleDto.class);
     }
 
     @Override
     public RoleDto getRoleById(long id) {
         Role role = findRoleById(id);
-        return mapToDTO(role);
+        return ObjectMapperUtil.map(role,RoleDto.class);
     }
 
     @Override
     public RoleDto getRoleByName(String name) {
         Role role = findRoleByName(name);
-        return mapToDTO(role);
+        return ObjectMapperUtil.map(role,RoleDto.class);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class RoleServiceImpl implements RoleService {
         // get content for page object
         List<Role> listOfRoles = users.getContent();
 
-        List<RoleDto> content = listOfRoles.stream().map(this::mapToDTO).collect(Collectors.toList());
+        List<RoleDto> content = ObjectMapperUtil.mapAll(listOfRoles,RoleDto.class);
 
         RolesDto rolesResponse = new RolesDto();
         rolesResponse.setContent(content);
@@ -78,7 +79,7 @@ public class RoleServiceImpl implements RoleService {
         Role role = findRoleById(id);
         role.setName(roleDto.getName());
         Role updatedRole = roleRepository.save(role);
-        return mapToDTO(updatedRole);
+        return ObjectMapperUtil.map(updatedRole,RoleDto.class);
     }
 
     @Override
@@ -93,15 +94,5 @@ public class RoleServiceImpl implements RoleService {
 
     private Role findRoleByName(String name){
         return roleRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Role", "name", name));
-    }
-
-    // convert Entity into DTO
-    private RoleDto mapToDTO(Role role){
-        return mapper.map(role, RoleDto.class);
-    }
-
-    // convert DTO to entity
-    private Role mapToEntity(RoleDto roleDto){
-        return mapper.map(roleDto, Role.class);
     }
 }

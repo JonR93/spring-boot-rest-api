@@ -33,12 +33,8 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Spy
-    private ModelMapper mapper;
-
     @InjectMocks
     private UserServiceImpl userServiceIml;
-
 
     private User user;
 

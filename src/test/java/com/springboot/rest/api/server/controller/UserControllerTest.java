@@ -1,41 +1,28 @@
 package com.springboot.rest.api.server.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springboot.rest.api.server.config.SecurityConfig;
-import com.springboot.rest.api.server.entity.User;
+
+import com.springboot.rest.api.server.config.AuditorAwareImpl;
 import com.springboot.rest.api.server.payload.UserDetailsDto;
 import com.springboot.rest.api.server.payload.UsersDto;
-import com.springboot.rest.api.server.repository.UserRepository;
-import com.springboot.rest.api.server.security.CustomUserDetailsService;
 import com.springboot.rest.api.server.service.UserService;
 import com.springboot.rest.api.server.utils.AppConstants;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
