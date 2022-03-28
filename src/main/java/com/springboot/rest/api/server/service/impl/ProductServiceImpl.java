@@ -49,22 +49,9 @@ public class ProductServiceImpl implements ProductService {
         // create Pageable instance
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
-        Page<Product> users = productRepository.findAll(pageable);
+        Page<Product> products = productRepository.findAll(pageable);
 
-        // get content for page object
-        List<Product> listOfProducts = users.getContent();
-
-        List<ProductDto> content = ObjectMapperUtil.mapAll(listOfProducts,ProductDto.class);
-
-        ProductsDto categoriesResponse = new ProductsDto();
-        categoriesResponse.setContent(content);
-        categoriesResponse.setPageNo(users.getNumber());
-        categoriesResponse.setPageSize(users.getSize());
-        categoriesResponse.setTotalElements(users.getTotalElements());
-        categoriesResponse.setTotalPages(users.getTotalPages());
-        categoriesResponse.setLast(users.isLast());
-
-        return categoriesResponse;
+        return new ProductsDto(products);
     }
 
     @Override

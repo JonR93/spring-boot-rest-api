@@ -7,7 +7,7 @@ import com.springboot.rest.api.server.payload.RolesDto;
 import com.springboot.rest.api.server.repository.RoleRepository;
 import com.springboot.rest.api.server.service.RoleService;
 import com.springboot.rest.api.server.utils.ObjectMapperUtil;
-import org.modelmapper.ModelMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,16 +18,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
     private RoleRepository roleRepository;
-
-    private ModelMapper mapper;
-
-    public RoleServiceImpl(RoleRepository roleRepository, ModelMapper mapper){
-        this.roleRepository = roleRepository;
-        this.mapper = mapper;
-    }
 
     @Override
     public RoleDto createRole(RoleDto roleDto) {
@@ -56,22 +50,9 @@ public class RoleServiceImpl implements RoleService {
         // create Pageable instance
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
-        Page<Role> users = roleRepository.findAll(pageable);
+        Page<Role> roles = roleRepository.findAll(pageable);
 
-        // get content for page object
-        List<Role> listOfRoles = users.getContent();
-
-        List<RoleDto> content = ObjectMapperUtil.mapAll(listOfRoles,RoleDto.class);
-
-        RolesDto rolesResponse = new RolesDto();
-        rolesResponse.setContent(content);
-        rolesResponse.setPageNo(users.getNumber());
-        rolesResponse.setPageSize(users.getSize());
-        rolesResponse.setTotalElements(users.getTotalElements());
-        rolesResponse.setTotalPages(users.getTotalPages());
-        rolesResponse.setLast(users.isLast());
-
-        return rolesResponse;
+        return new RolesDto(roles);
     }
 
     @Override

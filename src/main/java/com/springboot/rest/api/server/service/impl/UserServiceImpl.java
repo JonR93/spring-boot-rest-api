@@ -7,6 +7,7 @@ import com.springboot.rest.api.server.payload.UsersDto;
 import com.springboot.rest.api.server.repository.UserRepository;
 import com.springboot.rest.api.server.service.UserService;
 import com.springboot.rest.api.server.utils.ObjectMapperUtil;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,16 +19,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
-
-    private ModelMapper mapper;
-
-    public UserServiceImpl(UserRepository userRepository, ModelMapper mapper){
-        this.userRepository = userRepository;
-        this.mapper = mapper;
-    }
 
     @Override
     public UsersDto findUsers(int pageNo, int pageSize, String sortBy, String sortDir) {
@@ -39,20 +34,7 @@ public class UserServiceImpl implements UserService {
 
         Page<User> users = userRepository.findAll(pageable);
 
-        // get content for page object
-        List<User> listOfUsers = users.getContent();
-
-        List<UserDetailsDto> content = ObjectMapperUtil.mapAll(listOfUsers,UserDetailsDto.class);
-
-        UsersDto usersResponse = new UsersDto();
-        usersResponse.setContent(content);
-        usersResponse.setPageNo(users.getNumber());
-        usersResponse.setPageSize(users.getSize());
-        usersResponse.setTotalElements(users.getTotalElements());
-        usersResponse.setTotalPages(users.getTotalPages());
-        usersResponse.setLast(users.isLast());
-
-        return usersResponse;
+        return new UsersDto(users);
     }
 
     @Override

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Builder
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @Table(name = "categories", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"name"})
 })
-public class Category extends AuditableEntity{
+public class Category extends AuditableEntity implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

@@ -8,14 +8,11 @@ import com.springboot.rest.api.server.repository.CategoryRepository;
 import com.springboot.rest.api.server.service.CategoryService;
 import com.springboot.rest.api.server.utils.ObjectMapperUtil;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -52,20 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Page<Category> users = categoryRepository.findAll(pageable);
 
-        // get content for page object
-        List<Category> listOfCategorys = users.getContent();
-
-        List<CategoryDto> content = ObjectMapperUtil.mapAll(listOfCategorys,CategoryDto.class);
-
-        CategoriesDto categoriesResponse = new CategoriesDto();
-        categoriesResponse.setContent(content);
-        categoriesResponse.setPageNo(users.getNumber());
-        categoriesResponse.setPageSize(users.getSize());
-        categoriesResponse.setTotalElements(users.getTotalElements());
-        categoriesResponse.setTotalPages(users.getTotalPages());
-        categoriesResponse.setLast(users.isLast());
-
-        return categoriesResponse;
+        return new CategoriesDto(users);
     }
 
     @Override

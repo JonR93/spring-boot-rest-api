@@ -31,7 +31,6 @@ public class EmailServiceImpl implements EmailService {
 
     private MailRepository mailRepository;
     private JavaMailSender mailSender;
-    private ModelMapper mapper;
 
     @Async
     @Override
@@ -65,20 +64,7 @@ public class EmailServiceImpl implements EmailService {
 
         Page<Mail> allMail = mailRepository.findAll(pageable);
 
-        // get content for page object
-        List<Mail> listOfMails = allMail.getContent();
-
-        List<MailDto> content = ObjectMapperUtil.mapAll(listOfMails,MailDto.class);
-
-        MailsDto mailsDto = new MailsDto();
-        mailsDto.setContent(content);
-        mailsDto.setPageNo(allMail.getNumber());
-        mailsDto.setPageSize(allMail.getSize());
-        mailsDto.setTotalElements(allMail.getTotalElements());
-        mailsDto.setTotalPages(allMail.getTotalPages());
-        mailsDto.setLast(allMail.isLast());
-
-        return mailsDto;
+        return new MailsDto(allMail);
     }
 
     @Override
