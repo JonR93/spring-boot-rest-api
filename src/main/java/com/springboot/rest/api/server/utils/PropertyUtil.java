@@ -8,6 +8,10 @@ import org.springframework.context.ApplicationContext;
 @Slf4j
 public class PropertyUtil {
 
+    private PropertyUtil(){
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * Gets the value of a property stored in the application.properties file.
      * If a property name is not found, just return the property name.

@@ -8,6 +8,7 @@ import com.springboot.rest.api.server.repository.MailRepository;
 import com.springboot.rest.api.server.service.EmailService;
 import com.springboot.rest.api.server.utils.ObjectMapperUtil;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -43,11 +45,9 @@ public class EmailServiceImpl implements EmailService {
             helper.setSubject(mail.getSubject());
             helper.setFrom(mail.getSendFrom());
             mailSender.send(mimeMessage);
-        } catch(MailAuthenticationException e){
-            //todo: implement logging
-            throw new IllegalStateException("Failed to send email.");
-        } catch (MessagingException e) {
-            throw new IllegalStateException("Failed to send email.");
+        } catch(MailAuthenticationException | MessagingException e){
+            log.error("Failed to send email", e);
+            throw new IllegalStateException("Failed to send email.",e);
         }
         mail.setSentDate(new Date());
         mail.setWasSent(true);
