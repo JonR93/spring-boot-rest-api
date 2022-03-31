@@ -21,4 +21,7 @@ public class Role extends AuditableEntity implements Serializable {
 
     @Column(length = 60)
     private String name;
+
+    @Column(length = 60)
+    private String description;
 }
