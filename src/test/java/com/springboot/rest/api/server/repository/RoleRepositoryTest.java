@@ -49,6 +49,6 @@ class RoleRepositoryTest {
         roleRepository.save(roleAdmin);
         roleRepository.save(roleUser);
         List<Role> foundRoles = roleRepository.findAll();
-        Assertions.assertThat(foundRoles.size()).isEqualTo(2);
+        Assertions.assertThat(foundRoles).hasSize(2);
     }
 }

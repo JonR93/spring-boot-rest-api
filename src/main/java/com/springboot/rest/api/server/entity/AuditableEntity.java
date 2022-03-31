@@ -37,11 +37,11 @@ public class AuditableEntity {
      * Name of the user that created this entity
      */
     @CreatedBy
-    private String createdBy;
+    private Integer createdByUserId;
 
     /**
      * Name of the user that last updated this entity
      */
     @LastModifiedBy
-    private String lastModifiedBy;
+    private Integer lastModifiedByUserId;
 }
