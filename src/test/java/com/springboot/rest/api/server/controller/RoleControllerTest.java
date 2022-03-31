@@ -53,9 +53,9 @@ class RoleControllerTest {
 
     @Test
     void createRole() throws Exception{
-        RoleDto role = new RoleDto(0,"ROLE_TEST","Tester");
+        RoleDto role = new RoleDto(null,"ROLE_TEST","Tester");
 
-        given(roleService.createRole(role)).willReturn(new RoleDto(role.getId()+1,"ROLE_TEST","Tester"));
+        given(roleService.createRole(role)).willReturn(new RoleDto(1L,"ROLE_TEST","Tester"));
 
         ResultActions response = mockMvc.perform(post("/api/v1/roles")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +69,7 @@ class RoleControllerTest {
 
     @Test
     void getRoleById() throws Exception{
-        RoleDto role = new RoleDto(1,"ROLE_TEST","Tester");
+        RoleDto role = new RoleDto(1L,"ROLE_TEST","Tester");
 
         given(roleService.getRoleById(1L)).willReturn(role);
 
@@ -84,9 +84,9 @@ class RoleControllerTest {
     @Test
     void getAllRoles() throws Exception{
         List<RoleDto> listOfRoles = new ArrayList<>();
-        listOfRoles.add(new RoleDto(1,"ROLE_TEST","Tester"));
-        listOfRoles.add(new RoleDto(2,"ROLE_USER","User"));
-        listOfRoles.add(new RoleDto(3,"ROLE_ADMIN","System Admin"));
+        listOfRoles.add(new RoleDto(1L,"ROLE_TEST","Tester"));
+        listOfRoles.add(new RoleDto(2L,"ROLE_USER","User"));
+        listOfRoles.add(new RoleDto(3L,"ROLE_ADMIN","System Admin"));
 
         RolesDto roles = RolesDto.builder()
                 .content(listOfRoles)
@@ -113,7 +113,7 @@ class RoleControllerTest {
 
     @Test
     void updateRole() throws Exception{
-        RoleDto updatedRole = new RoleDto(1,"ROLE_TEST","Tester");
+        RoleDto updatedRole = new RoleDto(1L,"ROLE_TEST","Tester");
 
         given(roleService.updateRole(updatedRole,1L)).willReturn(updatedRole);
 

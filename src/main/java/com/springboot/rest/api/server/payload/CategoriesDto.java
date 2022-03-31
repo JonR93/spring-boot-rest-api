@@ -5,6 +5,7 @@ import com.springboot.rest.api.server.utils.ObjectMapperUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 public class CategoriesDto extends PageableDto{
     private List<CategoryDto> content;
 

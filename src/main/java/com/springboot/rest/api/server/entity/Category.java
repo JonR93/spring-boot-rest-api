@@ -21,4 +21,5 @@ public class Category extends AuditableEntity implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+    private String description;
 }

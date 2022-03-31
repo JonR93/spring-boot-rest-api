@@ -12,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MailDto {
-    private long id;
+    private Long id;
     private String sentFrom;
     private String sentTo;
     private String subject;
