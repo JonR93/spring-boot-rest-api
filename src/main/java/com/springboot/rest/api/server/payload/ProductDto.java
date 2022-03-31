@@ -1,6 +1,9 @@
 package com.springboot.rest.api.server.payload;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.springboot.rest.api.server.entity.Category;
+import com.springboot.rest.api.server.utils.BigDecimalSerializer;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +24,7 @@ public class ProductDto {
     private String description;
     private String review;
     private String affiliateLinkUrl;
+    @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal price;
     private double rating;
     private int impressions;
