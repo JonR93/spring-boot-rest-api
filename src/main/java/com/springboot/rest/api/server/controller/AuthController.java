@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +44,9 @@ public class AuthController {
     @ApiOperation(value = "Check if an email exists in the system to send a password rest link to")
     @PostMapping("/forgot-password")
     public ResponseEntity<Object> processForgotPassword(@RequestBody PasswordForgotDto passwordForgotDto){
+        if(!StringUtils.hasText(passwordForgotDto.getEmail())){
+            return new ResponseEntity<>("No email provided", HttpStatus.BAD_REQUEST);
+        }
         authService.processForgottenPassword(passwordForgotDto.getEmail());
         return new ResponseEntity<>("Password reset email sent", HttpStatus.OK);
     }
@@ -50,6 +54,13 @@ public class AuthController {
     @ApiOperation(value = "Reset password")
     @PostMapping("/reset-password")
     public ResponseEntity<Object> processResetPassword(@RequestBody PasswordResetDto passwordResetDto){
+        if(!StringUtils.hasText(passwordResetDto.getToken())){
+            return new ResponseEntity<>("Missing reset token", HttpStatus.BAD_REQUEST);
+        }
+        if(!(StringUtils.hasText(passwordResetDto.getPassword())
+                && passwordResetDto.getPassword().equals(passwordResetDto.getConfirmPassword()))){
+            return new ResponseEntity<>("Passwords do not match", HttpStatus.BAD_REQUEST);
+        }
         authService.processResetPassword(passwordResetDto.getPassword(), passwordResetDto.getToken());
         return new ResponseEntity<>("Password reset successfully", HttpStatus.OK);
     }
