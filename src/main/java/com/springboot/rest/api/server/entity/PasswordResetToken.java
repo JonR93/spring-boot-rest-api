@@ -14,7 +14,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Table(name = "paaswordResetTokens")
+@Table(name = "passwordResetTokens")
 public class PasswordResetToken implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
