@@ -1,8 +1,8 @@
 package com.springboot.rest.api.server.payload;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.springboot.rest.api.server.entity.Category;
+import com.springboot.rest.api.server.entity.ProductImage;
 import com.springboot.rest.api.server.utils.BigDecimalSerializer;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -29,5 +29,7 @@ public class ProductDto {
     private double rating;
     private int impressions;
     private boolean featured;
-    private Set<Category> categories;
+    private Set<CategoryDto> categories;
+    private ProductImageDto primaryProductImage;
+    private Set<ProductImageDto> productImages;
 }
