@@ -67,10 +67,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private Category findCategoryById(long id){
-        return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
+        return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(Category.class, "id", id));
     }
 
     private Category findCategoryByName(String name){
-        return categoryRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Category", "name", name));
+        return categoryRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException(Category.class, "name", name));
     }
 }

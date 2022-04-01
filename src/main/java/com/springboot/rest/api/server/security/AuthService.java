@@ -113,7 +113,7 @@ public class AuthService {
      * @param emailAddress - user's email address that will receive the password reset token
      */
     public void processForgottenPassword(String emailAddress){
-        User user = userRepository.findByEmail(emailAddress).orElseThrow(() -> new ResourceNotFoundException("User", "email", emailAddress));
+        User user = userRepository.findByEmail(emailAddress).orElseThrow(() -> new ResourceNotFoundException(User.class, "email", emailAddress));
         PasswordResetToken passwordResetToken = generatePasswordResetToken(user);
         Mail mail = Mail.builder()
                 .sendFrom(AppConstants.NO_REPLY_EMAIL_ADDRESS)
@@ -131,7 +131,7 @@ public class AuthService {
      * @param token
      */
     public void processResetPassword(String password, String token){
-        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token).orElseThrow(() -> new ResourceNotFoundException("PasswordResetToken", "token", token));
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token).orElseThrow(() -> new ResourceNotFoundException(PasswordResetToken.class, "token", token));
         User user = passwordResetToken.getUser();
         String updatedPassword = passwordEncoder.encode(password);
         userRepository.updatePassword(updatedPassword, user.getId());

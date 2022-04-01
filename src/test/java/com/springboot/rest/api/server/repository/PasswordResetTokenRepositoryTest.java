@@ -56,7 +56,7 @@ class PasswordResetTokenRepositoryTest {
 
     @Test
     void findByToken() {
-        PasswordResetToken token = passwordResetTokenRepository.findByToken(PASSWORD_RESET_TOKEN).orElseThrow(() -> new ResourceNotFoundException("PasswordResetToken", "token", PASSWORD_RESET_TOKEN));;
+        PasswordResetToken token = passwordResetTokenRepository.findByToken(PASSWORD_RESET_TOKEN).orElseThrow(() -> new ResourceNotFoundException(PasswordResetToken.class, "token", PASSWORD_RESET_TOKEN));;
         Assertions.assertThat(token).isNotNull();
         Assertions.assertThat(token.getToken()).isEqualTo(PASSWORD_RESET_TOKEN);
         Assertions.assertThat(token.getUser()).isEqualTo(user);

@@ -3,6 +3,7 @@ package com.springboot.rest.api.server.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.rest.api.server.payload.ProductDto;
 import com.springboot.rest.api.server.payload.ProductsDto;
+import com.springboot.rest.api.server.service.ProductImageService;
 import com.springboot.rest.api.server.service.ProductService;
 import com.springboot.rest.api.server.utils.AppConstants;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +44,9 @@ class ProductControllerTest {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private ProductImageService productImageService;
 
     @Autowired
     private WebApplicationContext webApplicationContext;

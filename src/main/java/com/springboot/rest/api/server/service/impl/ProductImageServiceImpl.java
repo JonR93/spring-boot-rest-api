@@ -25,7 +25,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Override
     public ProductImageDto addImageToProduct(Long productId, ProductImageDto productImageDto) {
         ProductImage productImage = ObjectMapperUtil.map(productImageDto, ProductImage.class);
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product","id",productId));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(Product.class,"id",productId));
         productImage.setProduct(product);
         ProductImage savedProductImage = productImageRepository.save(productImage);
         return ObjectMapperUtil.map(savedProductImage, ProductImageDto.class);
@@ -39,21 +39,13 @@ public class ProductImageServiceImpl implements ProductImageService {
 
     @Override
     public ProductImageDto getImage(Long productId, Long productImageId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product","id",productId));
-        ProductImage productImage = productImageRepository.findById(productImageId).orElseThrow(() -> new ResourceNotFoundException("ProductImage","id",productImageId));
-        if(productImage.getProduct().getId() != product.getId()){
-            throw new MyAPIException(HttpStatus.BAD_REQUEST, "Image does not belong to product.");
-        }
+        ProductImage productImage = findProductImage(productId,productImageId);
         return ObjectMapperUtil.map(productImage,ProductImageDto.class);
     }
 
     @Override
     public ProductImageDto updateImage(Long productId, Long productImageId, ProductImageDto productImageDto) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product","id",productId));
-        ProductImage productImage = productImageRepository.findById(productImageId).orElseThrow(() -> new ResourceNotFoundException("ProductImage","id",productImageId));
-        if(productImage.getProduct().getId() != product.getId()){
-            throw new MyAPIException(HttpStatus.BAD_REQUEST, "Image does not belong to product.");
-        }
+        ProductImage productImage = findProductImage(productId,productImageId);
 
         productImage.setPrimary(productImageDto.isPrimary());
         productImage.setAffiliateUrl(productImageDto.getAffiliateUrl());
@@ -66,11 +58,16 @@ public class ProductImageServiceImpl implements ProductImageService {
 
     @Override
     public void deleteImage(Long productId, Long productImageId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product","id",productId));
-        ProductImage productImage = productImageRepository.findById(productImageId).orElseThrow(() -> new ResourceNotFoundException("ProductImage","id",productImageId));
+        ProductImage productImage = findProductImage(productId,productImageId);
+        productImageRepository.delete(productImage);
+    }
+
+    public ProductImage findProductImage(Long productId, Long productImageId){
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(Product.class,"id",productId));
+        ProductImage productImage = productImageRepository.findById(productImageId).orElseThrow(() -> new ResourceNotFoundException(ProductImage.class,"id",productImageId));
         if(productImage.getProduct().getId() != product.getId()){
             throw new MyAPIException(HttpStatus.BAD_REQUEST, "Image does not belong to product.");
         }
-        productImageRepository.delete(productImage);
+        return productImage;
     }
 }

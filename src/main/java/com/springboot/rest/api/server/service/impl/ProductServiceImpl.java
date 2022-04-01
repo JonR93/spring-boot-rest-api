@@ -67,10 +67,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private Product findProductById(long id){
-        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
+        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(Product.class, "id", id));
     }
 
     private Product findProductByName(String name){
-        return productRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Product", "name", name));
+        return productRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException(Product.class, "name", name));
     }
 }

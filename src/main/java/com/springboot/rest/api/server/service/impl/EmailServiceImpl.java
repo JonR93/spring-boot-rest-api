@@ -69,13 +69,13 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public MailDto findMailById(long id) {
-        Mail mail = mailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Mail", "id", id));
+        Mail mail = mailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(Mail.class, "id", id));
         return ObjectMapperUtil.map(mail,MailDto.class);
     }
 
     @Override
     public void deleteMail(long id) {
-        Mail mail = mailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Mail", "id", id));
+        Mail mail = mailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(Mail.class, "id", id));
         mailRepository.delete(mail);
     }
 }

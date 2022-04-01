@@ -56,6 +56,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private User findUserById(long id){
-        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(User.class, "id", id));
     }
 }

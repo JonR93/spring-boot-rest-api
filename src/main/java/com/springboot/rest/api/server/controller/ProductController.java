@@ -1,6 +1,5 @@
 package com.springboot.rest.api.server.controller;
 
-import com.springboot.rest.api.server.payload.ProductImageDto;
 import com.springboot.rest.api.server.payload.ProductsDto;
 import com.springboot.rest.api.server.payload.ProductDto;
 import com.springboot.rest.api.server.service.ProductImageService;

@@ -67,10 +67,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private Role findRoleById(long id){
-        return roleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Role", "id", id));
+        return roleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(Role.class, "id", id));
     }
 
     private Role findRoleByName(String name){
-        return roleRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Role", "name", name));
+        return roleRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException(Role.class, "name", name));
     }
 }
