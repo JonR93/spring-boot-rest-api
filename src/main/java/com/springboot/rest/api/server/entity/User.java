@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -32,5 +33,5 @@ public class User extends AuditableEntity implements Serializable {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 }
