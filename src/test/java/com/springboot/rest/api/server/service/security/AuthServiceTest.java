@@ -130,7 +130,7 @@ class AuthServiceTest {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
 
         given(authenticationManager.authenticate(authenticationToken)).willReturn(authentication);
-        given(tokenProvider.generateToken(authentication)).willReturn("TOKEN");
+        given(tokenProvider.generateToken(authentication,null)).willReturn("TOKEN");
 
         String token = authService.login(username,password);
         Assertions.assertThat(token).isNotNull();

@@ -1,6 +1,7 @@
 package com.springboot.rest.api.server.security;
 
 
+import com.springboot.rest.api.server.entity.User;
 import com.springboot.rest.api.server.exception.MyAPIException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,17 +19,35 @@ public class JwtTokenProvider {
     @Value("${app.jwt-expiration-milliseconds}")
     private int jwtExpirationInMs;
 
+    /**
+     * Generate a JWT Token
+     *
+     * https://stackoverflow.com/questions/38897514/what-to-store-in-a-jwt
+     *
+     * @param authentication
+     * @param authenticatedUser
+     * @return JWT Token
+     */
     // generate token
-    public String generateToken(Authentication authentication){
+    public String generateToken(Authentication authentication, User authenticatedUser){
         String username = authentication.getName();
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationInMs);
-        return Jwts.builder()
-                .setSubject(username)
+
+        JwtBuilder jwtBuilder = Jwts.builder();
+        jwtBuilder.setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
+                .signWith(SignatureAlgorithm.HS512, jwtSecret);
+
+        if(authenticatedUser!=null){
+            jwtBuilder.claim("fullName",authenticatedUser.getName())
+                      .claim("username", authenticatedUser.getUsername())
+                      .claim("emailAddress", authenticatedUser.getEmail())
+                      .claim("roles", authenticatedUser.getRoles());
+        }
+
+        return jwtBuilder.compact();
     }
 
     // get username from the token

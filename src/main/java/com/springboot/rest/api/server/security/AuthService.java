@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -97,7 +98,8 @@ public class AuthService {
      * @return JWT token string
      */
     private String generateJwtToken(Authentication authentication){
-        return tokenProvider.generateToken(authentication);
+        User authenticatedUser = userRepository.findByUsernameOrEmail(authentication.getName(),authentication.getName()).orElse(null);
+        return tokenProvider.generateToken(authentication, authenticatedUser);
     }
 
     private PasswordResetToken generatePasswordResetToken(User user){
