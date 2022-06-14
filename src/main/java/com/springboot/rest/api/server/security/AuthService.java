@@ -11,6 +11,7 @@ import com.springboot.rest.api.server.repository.UserRepository;
 import com.springboot.rest.api.server.service.EmailService;
 import com.springboot.rest.api.server.utils.AppConstants;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AuthService {
@@ -65,7 +67,9 @@ public class AuthService {
                 .password(passwordEncoder.encode(registerUserDto.getPassword()))
                 .build();
         roleRepository.findByName("ROLE_USER").ifPresent(role -> user.setRoles(Collections.singleton(role)));
-        return userRepository.save(user);
+        User newUser = userRepository.save(user);
+        log.info(String.format("[%s] has successfully registered",registerUserDto.getUsername()));
+        return newUser;
     }
 
     /**
@@ -76,6 +80,7 @@ public class AuthService {
      */
     public String login(String usernameOrEmail, String password){
         Authentication userAuthentication = authenticateUser(usernameOrEmail,password);
+        log.info(String.format("[%s] has logged in",usernameOrEmail));
         return generateJwtToken(userAuthentication);
     }
 
