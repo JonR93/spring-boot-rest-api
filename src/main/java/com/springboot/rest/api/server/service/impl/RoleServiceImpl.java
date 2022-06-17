@@ -2,8 +2,8 @@ package com.springboot.rest.api.server.service.impl;
 
 import com.springboot.rest.api.server.entity.Role;
 import com.springboot.rest.api.server.exception.ResourceNotFoundException;
-import com.springboot.rest.api.server.payload.RoleDto;
-import com.springboot.rest.api.server.payload.RolesDto;
+import com.springboot.rest.api.server.payload.auth.RoleDto;
+import com.springboot.rest.api.server.payload.auth.RolesDto;
 import com.springboot.rest.api.server.repository.RoleRepository;
 import com.springboot.rest.api.server.service.RoleService;
 import com.springboot.rest.api.server.utils.ObjectMapperUtil;

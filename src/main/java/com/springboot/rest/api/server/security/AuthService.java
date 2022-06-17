@@ -2,9 +2,11 @@ package com.springboot.rest.api.server.security;
 
 import com.springboot.rest.api.server.entity.Mail;
 import com.springboot.rest.api.server.entity.PasswordResetToken;
+import com.springboot.rest.api.server.entity.Role;
 import com.springboot.rest.api.server.entity.User;
 import com.springboot.rest.api.server.exception.ResourceNotFoundException;
-import com.springboot.rest.api.server.payload.RegisterUserDto;
+import com.springboot.rest.api.server.payload.auth.AuthenticatedUser;
+import com.springboot.rest.api.server.payload.auth.RegisterUserDto;
 import com.springboot.rest.api.server.repository.PasswordResetTokenRepository;
 import com.springboot.rest.api.server.repository.RoleRepository;
 import com.springboot.rest.api.server.repository.UserRepository;
@@ -20,8 +22,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,6 +38,8 @@ public class AuthService {
     private final JwtTokenProvider tokenProvider;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final EmailService emailService;
+
+    private static final String DEFAULT_USER_ROLE = "ROLE_USER";
 
     /**
      * Is this username taken?
@@ -66,7 +72,7 @@ public class AuthService {
                 .email(registerUserDto.getEmail())
                 .password(passwordEncoder.encode(registerUserDto.getPassword()))
                 .build();
-        roleRepository.findByName("ROLE_USER").ifPresent(role -> user.setRoles(Collections.singleton(role)));
+        roleRepository.findByName(DEFAULT_USER_ROLE).ifPresent(role -> user.setRoles(Collections.singleton(role)));
         User newUser = userRepository.save(user);
         log.info(String.format("[%s] has successfully registered",registerUserDto.getUsername()));
         return newUser;
@@ -76,12 +82,26 @@ public class AuthService {
      * Performs user login authentication.
      * @param usernameOrEmail
      * @param password
-     * @return authentication token
+     * @return authenticated user
      */
-    public String login(String usernameOrEmail, String password){
-        Authentication userAuthentication = authenticateUser(usernameOrEmail,password);
-        log.info(String.format("[%s] has logged in",usernameOrEmail));
-        return generateJwtToken(userAuthentication);
+    public AuthenticatedUser login(String usernameOrEmail, String password){
+        User user = userRepository.findByUsernameOrEmail(usernameOrEmail,usernameOrEmail).orElse(null);
+        if(user != null){
+            Authentication authentication = authenticateUser(usernameOrEmail,password);
+            String accessToken = tokenProvider.generateToken(authentication, user);
+            Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
+
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser();
+            authenticatedUser.setId(user.getId());
+            authenticatedUser.setName(user.getName());
+            authenticatedUser.setUsername(user.getUsername());
+            authenticatedUser.setEmail(user.getEmail());
+            authenticatedUser.setRoles(roles);
+            authenticatedUser.setAccessToken(accessToken);
+
+            return authenticatedUser;
+        }
+        return null;
     }
 
     /**
@@ -95,16 +115,6 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
-    }
-
-    /**
-     * Generates a unique JWT token based on the user's authentication
-     * @param authentication
-     * @return JWT token string
-     */
-    private String generateJwtToken(Authentication authentication){
-        User authenticatedUser = userRepository.findByUsernameOrEmail(authentication.getName(),authentication.getName()).orElse(null);
-        return tokenProvider.generateToken(authentication, authenticatedUser);
     }
 
     private PasswordResetToken generatePasswordResetToken(User user){

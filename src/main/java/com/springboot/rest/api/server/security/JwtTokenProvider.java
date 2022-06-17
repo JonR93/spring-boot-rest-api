@@ -44,13 +44,6 @@ public class JwtTokenProvider {
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret);
 
-        if(authenticatedUser!=null){
-            jwtBuilder.claim("fullName",authenticatedUser.getName())
-                      .claim("username", authenticatedUser.getUsername())
-                      .claim("emailAddress", authenticatedUser.getEmail())
-                      .claim("roles", roles);
-        }
-
         return jwtBuilder.compact();
     }
 

@@ -1,11 +1,9 @@
 package com.springboot.rest.api.server.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springboot.rest.api.server.entity.Role;
 import com.springboot.rest.api.server.entity.User;
-import com.springboot.rest.api.server.payload.LoginDto;
-import com.springboot.rest.api.server.payload.PasswordForgotDto;
-import com.springboot.rest.api.server.payload.PasswordResetDto;
-import com.springboot.rest.api.server.payload.RegisterUserDto;
+import com.springboot.rest.api.server.payload.auth.*;
 import com.springboot.rest.api.server.security.AuthService;
 import com.springboot.rest.api.server.utils.ObjectMapperUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,14 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.http.MediaType.*;
@@ -58,10 +57,17 @@ class AuthControllerTest {
 
     @Test
     void authenticateUser() throws Exception {
-        String token = "TOKEN";
+        AuthenticatedUser authenticatedUser = new AuthenticatedUser(
+                1l,
+                "Jon",
+                "wontonjon",
+                "test@myrestapi.com",
+                Collections.singleton("USER"),
+                "TOKEN");
+
         loginDto = new LoginDto("wontonjon","password");
 
-        given(authService.login(loginDto.getUsernameOrEmail(),loginDto.getPassword())).willReturn(token);
+        given(authService.login(loginDto.getUsernameOrEmail(),loginDto.getPassword())).willReturn(authenticatedUser);
 
         ResultActions response = mockMvc.perform(post("/api/v1/auth/login")
                 .contentType(APPLICATION_JSON)
@@ -69,8 +75,11 @@ class AuthControllerTest {
 
         response.andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("$.accessToken", is(token)))
-                .andExpect(jsonPath("$.tokenType", is("Bearer")));
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Jon")))
+                .andExpect(jsonPath("$.username", is("wontonjon")))
+                .andExpect(jsonPath("$.email", is("test@myrestapi.com")))
+                .andExpect(jsonPath("$.accessToken", is("TOKEN")));
     }
 
     @Test

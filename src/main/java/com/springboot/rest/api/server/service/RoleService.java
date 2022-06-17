@@ -1,7 +1,7 @@
 package com.springboot.rest.api.server.service;
 
-import com.springboot.rest.api.server.payload.RoleDto;
-import com.springboot.rest.api.server.payload.RolesDto;
+import com.springboot.rest.api.server.payload.auth.RoleDto;
+import com.springboot.rest.api.server.payload.auth.RolesDto;
 
 public interface RoleService {
     RoleDto createRole(RoleDto roleDto);

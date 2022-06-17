@@ -1,6 +1,6 @@
 package com.springboot.rest.api.server.controller;
 
-import com.springboot.rest.api.server.payload.*;
+import com.springboot.rest.api.server.payload.auth.*;
 import com.springboot.rest.api.server.security.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,9 +23,9 @@ public class AuthController {
 
     @ApiOperation(value = "Authenticates user login")
     @PostMapping("/login")
-    public ResponseEntity<JWTAuthResponse> authenticateUser(@RequestBody LoginDto loginDto){
-        String authenticationToken = authService.login(loginDto.getUsernameOrEmail(),loginDto.getPassword());
-        return ResponseEntity.ok(new JWTAuthResponse(authenticationToken));
+    public ResponseEntity<AuthenticatedUser> authenticateUser(@RequestBody LoginDto loginDto){
+        AuthenticatedUser authenticatedUser = authService.login(loginDto.getUsernameOrEmail(),loginDto.getPassword());
+        return new ResponseEntity<>(authenticatedUser, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Registers a new user")

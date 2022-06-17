@@ -1,7 +1,7 @@
 package com.springboot.rest.api.server.controller;
 
-import com.springboot.rest.api.server.payload.UserDetailsDto;
-import com.springboot.rest.api.server.payload.UsersDto;
+import com.springboot.rest.api.server.payload.auth.UserDetailsDto;
+import com.springboot.rest.api.server.payload.auth.UsersDto;
 import com.springboot.rest.api.server.service.UserService;
 import com.springboot.rest.api.server.utils.AppConstants;
 import io.swagger.annotations.Api;

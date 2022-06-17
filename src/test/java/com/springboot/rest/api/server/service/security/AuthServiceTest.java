@@ -1,7 +1,9 @@
 package com.springboot.rest.api.server.service.security;
 
+import com.springboot.rest.api.server.entity.Role;
 import com.springboot.rest.api.server.entity.User;
-import com.springboot.rest.api.server.payload.RegisterUserDto;
+import com.springboot.rest.api.server.payload.auth.AuthenticatedUser;
+import com.springboot.rest.api.server.payload.auth.RegisterUserDto;
 import com.springboot.rest.api.server.repository.RoleRepository;
 import com.springboot.rest.api.server.repository.UserRepository;
 import com.springboot.rest.api.server.security.AuthService;
@@ -19,6 +21,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Collections;
+import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 
@@ -125,15 +130,24 @@ class AuthServiceTest {
     void login() {
         String username = "username";
         String password = "password";
+        User user = User.builder()
+                .id(1)
+                .username(username)
+                .roles(Collections.singleton(new Role(1,"USER","User")))
+                .build();
 
         Authentication authentication = Mockito.mock(Authentication.class);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
 
+        given(userRepository.findByUsernameOrEmail(username,username)).willReturn(Optional.ofNullable(user));
         given(authenticationManager.authenticate(authenticationToken)).willReturn(authentication);
-        given(tokenProvider.generateToken(authentication,null)).willReturn("TOKEN");
+        given(tokenProvider.generateToken(authentication,user)).willReturn("TOKEN");
 
-        String token = authService.login(username,password);
-        Assertions.assertThat(token).isNotNull();
+        AuthenticatedUser authenticatedUser = authService.login(username,password);
+        Assertions.assertThat(authenticatedUser).isNotNull();
+        Assertions.assertThat(authenticatedUser.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(authenticatedUser.getUsername()).isEqualTo(user.getUsername());
+        Assertions.assertThat(authenticatedUser.getAccessToken()).isEqualTo("TOKEN");
     }
 
     @Test

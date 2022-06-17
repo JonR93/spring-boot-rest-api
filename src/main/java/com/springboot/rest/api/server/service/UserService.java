@@ -1,7 +1,7 @@
 package com.springboot.rest.api.server.service;
 
-import com.springboot.rest.api.server.payload.UserDetailsDto;
-import com.springboot.rest.api.server.payload.UsersDto;
+import com.springboot.rest.api.server.payload.auth.UserDetailsDto;
+import com.springboot.rest.api.server.payload.auth.UsersDto;
 
 public interface UserService {
     UsersDto findUsers(int pageNo, int pageSize, String sortBy, String sortDir);

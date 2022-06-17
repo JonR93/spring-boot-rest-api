@@ -1,7 +1,7 @@
 package com.springboot.rest.api.server.controller;
 
-import com.springboot.rest.api.server.payload.RoleDto;
-import com.springboot.rest.api.server.payload.RolesDto;
+import com.springboot.rest.api.server.payload.auth.RoleDto;
+import com.springboot.rest.api.server.payload.auth.RolesDto;
 import com.springboot.rest.api.server.service.RoleService;
 import com.springboot.rest.api.server.utils.AppConstants;
 import io.swagger.annotations.Api;

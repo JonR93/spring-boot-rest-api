@@ -2,8 +2,8 @@ package com.springboot.rest.api.server.service.impl;
 
 import com.springboot.rest.api.server.entity.User;
 import com.springboot.rest.api.server.exception.ResourceNotFoundException;
-import com.springboot.rest.api.server.payload.UserDetailsDto;
-import com.springboot.rest.api.server.payload.UsersDto;
+import com.springboot.rest.api.server.payload.auth.UserDetailsDto;
+import com.springboot.rest.api.server.payload.auth.UsersDto;
 import com.springboot.rest.api.server.repository.UserRepository;
 import com.springboot.rest.api.server.service.UserService;
 import com.springboot.rest.api.server.utils.ObjectMapperUtil;

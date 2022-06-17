@@ -1,6 +1,7 @@
-package com.springboot.rest.api.server.payload;
+package com.springboot.rest.api.server.payload.auth;
 
-import com.springboot.rest.api.server.entity.User;
+import com.springboot.rest.api.server.entity.Role;
+import com.springboot.rest.api.server.payload.PageableDto;
 import com.springboot.rest.api.server.utils.ObjectMapperUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,15 +12,15 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 @Data
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsersDto extends PageableDto{
-    private List<UserDetailsDto> content;
+@SuperBuilder
+public class RolesDto extends PageableDto {
+    private List<RoleDto> content;
 
-    public UsersDto(Page<User> page) {
+    public RolesDto(Page<Role> page) {
         if(page!=null) {
-            this.content = ObjectMapperUtil.mapAll(page.getContent(), UserDetailsDto.class);
+            this.content = ObjectMapperUtil.mapAll(page.getContent(), RoleDto.class);
             setPageNo(page.getNumber());
             setPageSize(page.getSize());
             setTotalElements(page.getTotalElements());

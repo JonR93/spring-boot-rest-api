@@ -1,8 +1,8 @@
 package com.springboot.rest.api.server.service;
 
 import com.springboot.rest.api.server.entity.User;
-import com.springboot.rest.api.server.payload.UserDetailsDto;
-import com.springboot.rest.api.server.payload.UsersDto;
+import com.springboot.rest.api.server.payload.auth.UserDetailsDto;
+import com.springboot.rest.api.server.payload.auth.UsersDto;
 import com.springboot.rest.api.server.repository.UserRepository;
 import com.springboot.rest.api.server.service.impl.UserServiceImpl;
 import com.springboot.rest.api.server.utils.AppConstants;
@@ -12,9 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
 
 import java.util.Collections;

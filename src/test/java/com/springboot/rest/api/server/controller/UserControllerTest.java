@@ -2,9 +2,8 @@ package com.springboot.rest.api.server.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.springboot.rest.api.server.config.AuditorAwareImpl;
-import com.springboot.rest.api.server.payload.UserDetailsDto;
-import com.springboot.rest.api.server.payload.UsersDto;
+import com.springboot.rest.api.server.payload.auth.UserDetailsDto;
+import com.springboot.rest.api.server.payload.auth.UsersDto;
 import com.springboot.rest.api.server.service.UserService;
 import com.springboot.rest.api.server.utils.AppConstants;
 import org.junit.jupiter.api.BeforeEach;

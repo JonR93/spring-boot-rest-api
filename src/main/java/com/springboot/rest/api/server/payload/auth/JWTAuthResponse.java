@@ -1,4 +1,4 @@
-package com.springboot.rest.api.server.payload;
+package com.springboot.rest.api.server.payload.auth;
 
 public class JWTAuthResponse {
     private String accessToken;

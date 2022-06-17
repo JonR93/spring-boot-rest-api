@@ -1,9 +1,8 @@
 package com.springboot.rest.api.server.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springboot.rest.api.server.payload.RoleDto;
-import com.springboot.rest.api.server.payload.RolesDto;
-import com.springboot.rest.api.server.payload.UserDetailsDto;
+import com.springboot.rest.api.server.payload.auth.RoleDto;
+import com.springboot.rest.api.server.payload.auth.RolesDto;
 import com.springboot.rest.api.server.service.RoleService;
 import com.springboot.rest.api.server.utils.AppConstants;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

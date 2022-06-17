@@ -1,4 +1,4 @@
-package com.springboot.rest.api.server.payload;
+package com.springboot.rest.api.server.payload.auth;
 
 import lombok.Builder;
 import lombok.Data;
