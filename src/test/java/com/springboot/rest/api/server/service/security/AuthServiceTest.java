@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.BDDMockito.given;
 
@@ -108,6 +109,7 @@ class AuthServiceTest {
 
         User savedUser = User.builder()
                 .id(1)
+                .uuid(UUID.randomUUID())
                 .name(newUserDto.getName())
                 .username(newUserDto.getUsername())
                 .email(newUserDto.getEmail())
@@ -120,6 +122,7 @@ class AuthServiceTest {
 
         Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(user.getId()).isPositive();
+        Assertions.assertThat(user.getUuid()).isNotNull();
         Assertions.assertThat(user.getName()).isEqualTo(newUserDto.getName());
         Assertions.assertThat(user.getUsername()).isEqualTo(newUserDto.getUsername());
         Assertions.assertThat(user.getEmail()).isEqualTo(newUserDto.getEmail());
@@ -132,6 +135,7 @@ class AuthServiceTest {
         String password = "password";
         User user = User.builder()
                 .id(1)
+                .uuid(UUID.randomUUID())
                 .username(username)
                 .roles(Collections.singleton(new Role(1,"USER","User")))
                 .build();
@@ -145,7 +149,7 @@ class AuthServiceTest {
 
         AuthenticatedUser authenticatedUser = authService.login(username,password);
         Assertions.assertThat(authenticatedUser).isNotNull();
-        Assertions.assertThat(authenticatedUser.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(authenticatedUser.getUuid()).isEqualTo(user.getUuid());
         Assertions.assertThat(authenticatedUser.getUsername()).isEqualTo(user.getUsername());
         Assertions.assertThat(authenticatedUser.getAccessToken()).isEqualTo("TOKEN");
     }

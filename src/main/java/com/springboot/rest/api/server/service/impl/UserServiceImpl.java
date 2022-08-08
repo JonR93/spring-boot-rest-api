@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -34,14 +36,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetailsDto findUser(long id) {
-        User user = findUserById(id);
+    public UserDetailsDto findUser(UUID uuid) {
+        User user = findUserByUUID(uuid);
         return ObjectMapperUtil.map(user,UserDetailsDto.class);
     }
 
     @Override
-    public UserDetailsDto updateUser(UserDetailsDto userDetailsDto, long id) {
-        User user = findUserById(id);
+    public UserDetailsDto updateUser(UserDetailsDto userDetailsDto, UUID uuid) {
+        User user = findUserByUUID(uuid);
         user.setName(userDetailsDto.getName());
         user.setUsername(userDetailsDto.getUsername());
         user.setEmail(userDetailsDto.getEmail());
@@ -50,12 +52,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(long id) {
-        User user = findUserById(id);
+    public void deleteUser(UUID uuid) {
+        User user = findUserByUUID(uuid);
         userRepository.delete(user);
     }
 
     private User findUserById(long id){
         return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(User.class, "id", id));
+    }
+
+    private User findUserByUUID(UUID uuid){
+        return userRepository.findByUuid(uuid).orElseThrow(() -> new ResourceNotFoundException(User.class, "uuid", uuid));
     }
 }

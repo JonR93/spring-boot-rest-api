@@ -18,6 +18,7 @@ import org.springframework.data.domain.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -40,6 +41,7 @@ class UserServiceTest {
     void setUp() {
         user = User.builder()
                 .id(1L)
+                .uuid(UUID.randomUUID())
                 .name("Jon")
                 .username("WontonJon")
                 .email("wontonjon@email.com")
@@ -73,8 +75,8 @@ class UserServiceTest {
 
     @Test
     void findUser() {
-        given(userRepository.findById(1L)).willReturn(Optional.of(user));
-        UserDetailsDto foundUser = userServiceIml.findUser(user.getId());
+        given(userRepository.findByUuid(user.getUuid())).willReturn(Optional.of(user));
+        UserDetailsDto foundUser = userServiceIml.findUser(user.getUuid());
         assertThat(foundUser).isNotNull();
     }
 
@@ -91,10 +93,10 @@ class UserServiceTest {
         savedUser.setUsername(unsavedChanges.getUsername());
         savedUser.setEmail(unsavedChanges.getEmail());
 
-        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+        given(userRepository.findByUuid(user.getUuid())).willReturn(Optional.of(user));
         given(userRepository.save(user)).willReturn(savedUser);
 
-        UserDetailsDto updatedUser = userServiceIml.updateUser(unsavedChanges,user.getId());
+        UserDetailsDto updatedUser = userServiceIml.updateUser(unsavedChanges,user.getUuid());
 
         Assertions.assertThat(updatedUser.getName()).isEqualTo("test");
         Assertions.assertThat(updatedUser.getEmail()).isEqualTo("test@test.com");
@@ -103,10 +105,9 @@ class UserServiceTest {
 
     @Test
     void deleteUser() {
-        long userId = 1L;
-        given(userRepository.findById(userId)).willReturn(Optional.of(user));
+        given(userRepository.findByUuid(user.getUuid())).willReturn(Optional.of(user));
         willDoNothing().given(userRepository).delete(user);
-        userServiceIml.deleteUser(userId);
+        userServiceIml.deleteUser(user.getUuid());
         verify(userRepository, times(1)).delete(user);
     }
 }

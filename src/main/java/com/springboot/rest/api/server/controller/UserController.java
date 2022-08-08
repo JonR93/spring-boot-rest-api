@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @Api(value = "CRUD Rest endpoints for User resources")
 @RestController
@@ -24,11 +25,11 @@ public class UserController {
         this.userService = userService;
     }
 
-    @ApiOperation(value = "Get User by id")
+    @ApiOperation(value = "Get User by uuid")
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<UserDetailsDto> getUserDetails(@PathVariable(value = "id") Long id){
-        return ResponseEntity.ok(userService.findUser(id));
+    @GetMapping(value = "/{uuid}")
+    public ResponseEntity<UserDetailsDto> getUserDetails(@PathVariable(value = "uuid") UUID uuid){
+        return ResponseEntity.ok(userService.findUser(uuid));
     }
 
     @ApiOperation(value = "Get all Users")
@@ -43,19 +44,19 @@ public class UserController {
         return userService.findUsers(pageNo, pageSize, sortBy, sortDir);
     }
 
-    @ApiOperation(value = "Update User by id")
+    @ApiOperation(value = "Update User by uuid")
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDetailsDto> updateUser(@Valid @RequestBody UserDetailsDto userDetailsDto, @PathVariable(name = "id") long id){
-        UserDetailsDto updatedUser = userService.updateUser(userDetailsDto, id);
+    @PutMapping("/{uuid}")
+    public ResponseEntity<UserDetailsDto> updateUser(@Valid @RequestBody UserDetailsDto userDetailsDto, @PathVariable(name = "uuid") UUID uuid){
+        UserDetailsDto updatedUser = userService.updateUser(userDetailsDto, uuid);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Delete User By id")
+    @ApiOperation(value = "Delete User By uuid")
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable(name = "id") long id){
-        userService.deleteUser(id);
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<String> deleteUser(@PathVariable(name = "uuid") UUID uuid){
+        userService.deleteUser(uuid);
         return new ResponseEntity<>("User deleted successfully.", HttpStatus.OK);
     }
 }

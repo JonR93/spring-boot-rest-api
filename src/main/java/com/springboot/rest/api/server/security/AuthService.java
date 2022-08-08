@@ -67,6 +67,7 @@ public class AuthService {
      */
     public User registerUser(RegisterUserDto registerUserDto){
         User user = User.builder()
+                .uuid(UUID.randomUUID()) //TODO: implement a uuid generator
                 .name(registerUserDto.getName())
                 .username(registerUserDto.getUsername())
                 .email(registerUserDto.getEmail())
@@ -92,7 +93,7 @@ public class AuthService {
             Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
 
             AuthenticatedUser authenticatedUser = new AuthenticatedUser();
-            authenticatedUser.setId(user.getId());
+            authenticatedUser.setUuid(user.getUuid());
             authenticatedUser.setName(user.getName());
             authenticatedUser.setUsername(user.getUsername());
             authenticatedUser.setEmail(user.getEmail());

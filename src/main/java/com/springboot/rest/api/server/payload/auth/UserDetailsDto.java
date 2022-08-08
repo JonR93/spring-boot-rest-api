@@ -6,13 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @ApiModel(description = "User model information")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDetailsDto {
-    private Long id;
+    private UUID uuid;
     private String name;
     private String username;
     private String email;

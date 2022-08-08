@@ -19,6 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.given;
@@ -58,7 +59,7 @@ class AuthControllerTest {
     @Test
     void authenticateUser() throws Exception {
         AuthenticatedUser authenticatedUser = new AuthenticatedUser(
-                1l,
+                UUID.randomUUID(),
                 "Jon",
                 "wontonjon",
                 "test@myrestapi.com",
@@ -75,7 +76,7 @@ class AuthControllerTest {
 
         response.andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.uuid", is(authenticatedUser.getUuid().toString())))
                 .andExpect(jsonPath("$.name", is("Jon")))
                 .andExpect(jsonPath("$.username", is("wontonjon")))
                 .andExpect(jsonPath("$.email", is("test@myrestapi.com")))

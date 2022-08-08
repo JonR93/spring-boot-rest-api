@@ -20,6 +20,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.given;
@@ -78,14 +79,15 @@ class UserControllerTest {
     @Test
     void getUserDetails() throws Exception{
         UserDetailsDto user = UserDetailsDto.builder()
+                .uuid(UUID.randomUUID())
                 .name("Jon")
                 .username("wontonjon")
                 .email("email@gmail.com")
                 .build();
 
-        given(userService.findUser(1L)).willReturn(user);
+        given(userService.findUser(user.getUuid())).willReturn(user);
 
-        ResultActions response = mockMvc.perform(get("/api/v1/users/{id}", 1L));
+        ResultActions response = mockMvc.perform(get("/api/v1/users/{uuid}", user.getUuid()));
 
         response.andExpect(status().isOk())
                 .andDo(print())
@@ -122,13 +124,14 @@ class UserControllerTest {
     @Test
     void updateUser() throws Exception{
         UserDetailsDto updatedUser = UserDetailsDto.builder()
+                .uuid(UUID.randomUUID())
                 .name("Jonathan")
                 .email("email@gmail.com")
                 .build();
 
-        given(userService.updateUser(updatedUser,1L)).willReturn(updatedUser);
+        given(userService.updateUser(updatedUser,updatedUser.getUuid())).willReturn(updatedUser);
 
-        ResultActions response = mockMvc.perform(put("/api/v1/users/{id}", 1L)
+        ResultActions response = mockMvc.perform(put("/api/v1/users/{uuid}", updatedUser.getUuid())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedUser)));
 
@@ -140,8 +143,9 @@ class UserControllerTest {
 
     @Test
     void deleteUser() throws Exception{
-        willDoNothing().given(userService).deleteUser(1L);
-        ResultActions response = mockMvc.perform(delete("/api/v1/users/{id}", 1L));
+        UUID uuid = UUID.randomUUID();
+        willDoNothing().given(userService).deleteUser(uuid);
+        ResultActions response = mockMvc.perform(delete("/api/v1/users/{uuid}", uuid));
         response.andExpect(status().isOk())
                 .andDo(print());
     }
