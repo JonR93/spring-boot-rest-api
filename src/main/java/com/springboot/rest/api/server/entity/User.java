@@ -25,7 +25,7 @@ public class User extends AuditableEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private UUID uuid; //TODO: generate automatically
+    private UUID uuid;
     private String name;
     private String username;
     private String email;
@@ -36,4 +36,11 @@ public class User extends AuditableEntity implements Serializable {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles = new HashSet<>();
+
+    @PrePersist
+    private void prePersist(){
+        if(uuid == null){
+            uuid = UUID.randomUUID();
+        }
+    }
 }

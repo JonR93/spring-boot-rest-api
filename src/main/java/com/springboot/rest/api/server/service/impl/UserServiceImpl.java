@@ -57,10 +57,6 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
     }
 
-    private User findUserById(long id){
-        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(User.class, "id", id));
-    }
-
     private User findUserByUUID(UUID uuid){
         return userRepository.findByUuid(uuid).orElseThrow(() -> new ResourceNotFoundException(User.class, "uuid", uuid));
     }

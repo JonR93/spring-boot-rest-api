@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -145,7 +146,7 @@ class AuthServiceTest {
 
         given(userRepository.findByUsernameOrEmail(username,username)).willReturn(Optional.ofNullable(user));
         given(authenticationManager.authenticate(authenticationToken)).willReturn(authentication);
-        given(tokenProvider.generateToken(authentication,user)).willReturn("TOKEN");
+        given(tokenProvider.generateToken(authentication)).willReturn("TOKEN");
 
         AuthenticatedUser authenticatedUser = authService.login(username,password);
         Assertions.assertThat(authenticatedUser).isNotNull();

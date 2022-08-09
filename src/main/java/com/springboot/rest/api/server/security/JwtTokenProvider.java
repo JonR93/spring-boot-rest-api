@@ -1,8 +1,6 @@
 package com.springboot.rest.api.server.security;
 
 
-import com.springboot.rest.api.server.entity.Role;
-import com.springboot.rest.api.server.entity.User;
 import com.springboot.rest.api.server.exception.MyAPIException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
@@ -32,9 +28,8 @@ public class JwtTokenProvider {
      * @return JWT Token
      */
     // generate token
-    public String generateToken(Authentication authentication, User authenticatedUser){
+    public String generateToken(Authentication authentication){
         String username = authentication.getName();
-        Set roles = authenticatedUser.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationInMs);
 

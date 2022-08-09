@@ -67,7 +67,6 @@ public class AuthService {
      */
     public User registerUser(RegisterUserDto registerUserDto){
         User user = User.builder()
-                .uuid(UUID.randomUUID()) //TODO: implement a uuid generator
                 .name(registerUserDto.getName())
                 .username(registerUserDto.getUsername())
                 .email(registerUserDto.getEmail())
@@ -89,7 +88,7 @@ public class AuthService {
         User user = userRepository.findByUsernameOrEmail(usernameOrEmail,usernameOrEmail).orElse(null);
         if(user != null){
             Authentication authentication = authenticateUser(usernameOrEmail,password);
-            String accessToken = tokenProvider.generateToken(authentication, user);
+            String accessToken = tokenProvider.generateToken(authentication);
             Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
 
             AuthenticatedUser authenticatedUser = new AuthenticatedUser();
